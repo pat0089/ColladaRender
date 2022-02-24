@@ -52,6 +52,8 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
         /// <returns>Model from the information in the COLLADA object</returns>
         public static Model Load(COLLADA model)
         {
+            //Console.Out.WriteLine(JsonConvert.SerializeObject(model, Formatting.Indented, new JsonConverter[] {new StringEnumConverter()}));
+            
             var unprocessedPositions = new Vector3[] { };
             var unprocessedNormals = new Vector3[] { };
             var unprocessedTexCoords = new Vector2[] { };
@@ -83,8 +85,6 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                     //Search Items[] for geom indices
                     foreach (var meshItem in mesh.Items)
                     {
-                        //Currently, this renderer can only load up triangle-based models correctly,
-                        //  but will be adding polylist (properly) and other primitives eventually
                         if (meshItem is triangles)
                         {
                             var triangles = meshItem as triangles;
@@ -169,8 +169,14 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                                 stride++;
                         }
                         
-                        if (source.Item is float_array colorArray && colorArray.id.EndsWith("color") | colorArray.id.EndsWith("color-array"))
-                        { 
+                        if (source.Item is float_array colorArray)
+                        {
+                            if (source.name is not null)
+                            {
+                                if (!colorArray.id.EndsWith(source.name) && !colorArray.id.EndsWith(source.name + "-array")) continue;
+                            }
+                            else if (!colorArray.id.EndsWith("color") && !colorArray.id.EndsWith("color-array"))
+                                continue;
                             unprocessedColors = toVec3Array(colorArray.Values);
                             if (stride >= 0)
                                 stride++;
@@ -184,22 +190,22 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                         var tempVertex = new Vertex();
                         if (positionOffset != -1)
                         {
-                            tempVertex.Position = unprocessedPositions[unprocessedIndices[i + positionOffset]];
+                            tempVertex.Position = unprocessedPositions[unprocessedIndices[i + positionOffset] % unprocessedPositions.Length];
                         }
 
                         if (normalOffset != -1)
                         {
-                            tempVertex.Normal = unprocessedNormals[unprocessedIndices[i + normalOffset]];
+                            tempVertex.Normal = unprocessedNormals[unprocessedIndices[i + normalOffset] % unprocessedNormals.Length];
                         }
 
                         if (texCoordOffset != -1)
                         {
-                            tempVertex.TexCoord = unprocessedTexCoords[unprocessedIndices[i + texCoordOffset]];
+                            tempVertex.TexCoord = unprocessedTexCoords[unprocessedIndices[i + texCoordOffset] % unprocessedTexCoords.Length];
                         }
                         
                         if (colorOffset != -1)
                         {
-                            tempVertex.Color = unprocessedColors[unprocessedIndices[i + colorOffset]];
+                            tempVertex.Color = unprocessedColors[unprocessedIndices[i + colorOffset] % unprocessedColors.Length];
                         }
                         vertexList.Add(tempVertex);
                     }

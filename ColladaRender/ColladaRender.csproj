@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="OpenTK" Version="4.6.7" />
+      <PackageReference Include="OpenTK" Version="4.7.1" />
       <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     </ItemGroup>
 
@@ -58,6 +58,9 @@
       </None>
       <None Update="RenderEngine\res\img\pixel.bmp">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\img\cowboy.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 
