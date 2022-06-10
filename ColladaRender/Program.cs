@@ -18,7 +18,7 @@ namespace ColladaRender
             }
             else
             {
-                width = 600;
+                width = 800;
                 height = 600;
                 title = "Testing, testing, 123!";
             }

@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="ImGui.NET" Version="1.87.2" />
       <PackageReference Include="OpenTK" Version="4.7.1" />
       <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     </ItemGroup>
@@ -60,6 +61,12 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\img\cowboy.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\img\WS2_pln_guidplane.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\WS2_pln_guidplane141.dae">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Numerics;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using Quaternion = OpenTK.Mathematics.Quaternion;
+using Vector2 = OpenTK.Mathematics.Vector2;
+using Vector3 = OpenTK.Mathematics.Vector3;
+using Matrix4 = OpenTK.Mathematics.Matrix4;
 
 namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
 {
@@ -9,56 +14,13 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
     /// </summary>
     public class Camera
     {
-        private static Vector3 Front = -Vector3.UnitZ;
-        private static Vector3 Up = Vector3.UnitY;
-        private static Vector3 Right = Vector3.UnitX;
-        
-        /// <summary>
-        /// Direction for the camera to move
-        /// </summary>
-        public enum Direction
-        {
-            Up, Down, Left, Right, Forward, Backward
-        }
+        private Quaternion _direction = Quaternion.Identity;
 
-        private float _pitch;
-        
-        /// <summary>
-        /// Pitch in degrees
-        /// </summary>
-        public float Pitch {
-            get
-            {
-                return MathHelper.RadiansToDegrees(_pitch);
-            }
-            set
-            {
-                var degs = MathHelper.Clamp(value, -89.9f, 89.9f);
-                _pitch = MathHelper.DegreesToRadians(degs);
-                UpdateViewVectors();
-            }
-        }
-        
-        private float _yaw = -MathHelper.PiOver2;
-        
-        /// <summary>
-        /// Yaw in degrees
-        /// </summary>
-        public float Yaw
-        {
-            get
-            {
-                return MathHelper.RadiansToDegrees(_yaw);
-            }
-            set
-            {
-                _yaw = MathHelper.DegreesToRadians(value);
-                UpdateViewVectors();
-            }
-        }
-        
-        
-        private float _fieldOfView = MathHelper.PiOver2;
+        private Vector2 _clickedMousePos = Vector2.Zero;
+
+        private float _fieldOfView = MathHelper.PiOver3;
+
+        private bool _leftWasDown;
         
         /// <summary>
         /// FOV angle in degrees
@@ -94,6 +56,10 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         private float _sensitivity = 0.2f;
         
         private float _cameraSpeed = 1.5f;
+
+        private float _lengthFromCenter = 100.0f;
+
+        private float _zoomPercentage = 1.0f;
         
         /// <summary>
         /// Movement speed of the camera
@@ -117,7 +83,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         public Matrix4 ViewMatrix {
             get
             {
-                return Matrix4.LookAt(_position, _position + Front, Up);
+                return Matrix4.LookAt(_position * (Vector3.One * (1.0f - _zoomPercentage) * _lengthFromCenter), Vector3.Zero, Vector3.UnitY);
             }
         }
 
@@ -128,7 +94,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         public Matrix4 ProjectionMatrix
         { 
             get {
-                return Matrix4.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, 0.01f, 100f);
+                return Matrix4.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, 0.01f, 100.0f);
             }
         }
 
@@ -144,51 +110,52 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         }
         
         /// <summary>
-        /// Move the camera based on elapsed time
-        /// </summary>
-        /// <param name="toMove">Direction to move</param>
-        /// <param name="elapsedTime">Time elapsed since last update</param>
-        public void Move(Direction toMove, float elapsedTime)
-        {
-            switch (toMove)
-            {
-                case Direction.Up:
-                    _position += Vector3.UnitY * _cameraSpeed * elapsedTime;
-                    break;
-                case Direction.Down:
-                    _position += -Vector3.UnitY * _cameraSpeed * elapsedTime;
-                    break;
-                case Direction.Backward:
-                    _position -= Front * Speed * elapsedTime;
-                    break;
-                case Direction.Forward:
-                    _position += Front * Speed * elapsedTime;
-                    break;
-                case Direction.Right:
-                    _position += Right * Speed * elapsedTime;
-                    break;
-                case Direction.Left:
-                    _position -= Right * Speed * elapsedTime;
-                    break;
-            }
-        }
-        
-        /// <summary>
         /// Update the eye direction
         /// </summary>
         /// <param name="mouseInput">Mouse state since last update</param>
-        public void Update(MouseState mouseInput)
+        /// <param name="keyboardInput">Keyboard state since last update</param>
+        /// <param name="deltaTime">Time elapsed since last update</param>
+        public void Update(MouseState mouseInput, KeyboardState keyboardInput, float deltaTime)
         {
-            if (mouseInput.Delta.Length > 0.0f)
+            
+            if (keyboardInput[Keys.LeftAlt])
             {
-                Yaw += mouseInput.Delta.X * _sensitivity;
-                Pitch -= mouseInput.Delta.Y * _sensitivity;
-            }
+                if (mouseInput[MouseButton.Left])
+                {
+                    if (!_leftWasDown)
+                    {
+                        _clickedMousePos = mouseInput.Position;
+                        _leftWasDown = true;
+                    } else if (_leftWasDown)
+                    {
+                        var dragDelta = _clickedMousePos - mouseInput.Position;
+                        _clickedMousePos = mouseInput.Position;
 
-            if (mouseInput.ScrollDelta.Length > 0.0f)
-            {
-                FOV += mouseInput.ScrollDelta.Y;
+                        dragDelta.X = -dragDelta.X;
+                        var deltaDegrees = dragDelta * _sensitivity;
+
+                        var q1 = Quaternion.FromAxisAngle(Vector3.UnitY, deltaDegrees.X * 0.01f);
+                        var q2 = Quaternion.FromAxisAngle(Vector3.UnitX, deltaDegrees.Y * 0.01f);
+                        var newDirection =  q1 * q2;
+                        _position = Vector3.Transform(_position, newDirection);
+                    }
+                }
+                else if (!mouseInput[MouseButton.Left])
+                {
+                    _clickedMousePos = Vector2.Zero;
+                }
+                
+                if (mouseInput.ScrollDelta.Length > 0.0f)
+                {
+                    //needs to be changed to a point along the lookat vector
+                    //FOV += mouseInput.ScrollDelta.Y;
+
+                    _zoomPercentage = Math.Clamp(_zoomPercentage + 0.0001f * mouseInput.ScrollDelta.Y, 0.01f, 1.0f);
+                    
+                }
+                
             }
+            
         }
 
         /// <summary>
@@ -200,20 +167,30 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         {
             _aspectRatio = width / (float) height;
         }
-        
-        /// <summary>
-        /// Update the internal eye view vectors
-        /// </summary>
-        public void UpdateViewVectors()
+
+        Vector3 GetSphericalCoordinates(Vector3 cartesian)
         {
-            Front.X = MathF.Cos(_pitch) * MathF.Cos(_yaw);
-            Front.Y = MathF.Sin(_pitch);
-            Front.Z = MathF.Cos(_pitch) * MathF.Sin(_yaw);
-
-            Front.Normalize();
-
-            Right = Vector3.Normalize(Vector3.Cross(Front, Vector3.UnitY));
-            Up = Vector3.Normalize(Vector3.Cross(Right, Front));
+            float r = cartesian.Length;
+ 
+            float phi = MathF.Atan2(cartesian.Z / cartesian.X, cartesian.X);
+            float theta = MathF.Acos(cartesian.Y / r);
+ 
+            if (cartesian.X < 0)
+                phi += MathF.PI;
+ 
+            return new Vector3 (r, phi, theta);
         }
+        
+        Vector3 GetCartesianCoordinates(Vector3 spherical)
+        {
+            Vector3 ret = new Vector3 ();
+ 
+            ret.X = spherical.X * MathF.Cos (spherical.Z) * MathF.Cos (spherical.Y);
+            ret.Y = spherical.X * MathF.Sin (spherical.Z);
+            ret.Z = spherical.X * MathF.Cos (spherical.Z) * MathF.Sin (spherical.Y);
+ 
+            return ret;
+        }
+        
     }
 }

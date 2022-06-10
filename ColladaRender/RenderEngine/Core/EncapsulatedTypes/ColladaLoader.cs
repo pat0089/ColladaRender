@@ -59,7 +59,12 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
             var unprocessedTexCoords = new Vector2[] { };
             var unprocessedColors = new Vector3[] { };
             var unprocessedIndices = new int[] { };
-            
+
+            string positionSourceID = null;
+            string normalSourceID = null;
+            string texCoordSourceID = null;
+            string colorSourceID = null;
+
             int positionOffset = -1;
             int normalOffset = -1;
             int texCoordOffset = -1;
@@ -85,6 +90,8 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                     //Search Items[] for geom indices
                     foreach (var meshItem in mesh.Items)
                     {
+                        positionSourceID = mesh.vertices.input[0].source;
+                        
                         if (meshItem is triangles)
                         {
                             var triangles = meshItem as triangles;
@@ -98,16 +105,19 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                                 if (inputItem.semantic == "NORMAL")
                                 {
                                     normalOffset = (int) inputItem.offset;
+                                    normalSourceID = inputItem.source;
                                 }
 
                                 if (inputItem.semantic == "TEXCOORD")
                                 {
                                     texCoordOffset = (int) inputItem.offset;
+                                    texCoordSourceID = inputItem.source;
                                 }
 
                                 if (inputItem.semantic == "COLOR")
                                 {
                                     colorOffset = (int) inputItem.offset;
+                                    colorSourceID = inputItem.source;
                                 }
                             }
                             numAttributes = triangles.input.Length;
@@ -127,16 +137,19 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                                 if (inputItem.semantic == "NORMAL")
                                 {
                                     normalOffset = (int) inputItem.offset;
+                                    normalSourceID = inputItem.source;
                                 }
 
                                 if (inputItem.semantic == "TEXCOORD")
                                 {
                                     texCoordOffset = (int) inputItem.offset;
+                                    texCoordSourceID = inputItem.source;
                                 }
 
                                 if (inputItem.semantic == "COLOR")
                                 {
                                     colorOffset = (int) inputItem.offset;
+                                    colorSourceID = inputItem.source;
                                 }
                             }
                             
@@ -148,44 +161,34 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                     //Iterate on the source[] for the float array information for each attribute
                     foreach (var source in mesh.source)
                     {
-                        if (source.Item is float_array positionArray && positionArray.id.EndsWith("positions") | positionArray.id.EndsWith("positions-array"))
+                        if (positionSourceID.EndsWith(source.id))
                         {
+                            var positionArray = source.Item as float_array;
                             unprocessedPositions = toVec3Array(positionArray.Values);
-                            if (stride >= 0)
-                                stride++;
                         }
 
-                        if (source.Item is float_array normalArray && normalArray.id.EndsWith("normals") | normalArray.id.EndsWith("normals-array"))
+                        if (normalSourceID.EndsWith(source.id))
                         {
+                            var normalArray = source.Item as float_array;
                             unprocessedNormals = toVec3Array(normalArray.Values);
-                            if (stride >= 0)
-                                stride++;
                         }
 
-                        if (source.Item is float_array texCoordArray && texCoordArray.id.EndsWith("map-0") | texCoordArray.id.EndsWith("map-0-array"))
+                        if (texCoordSourceID.EndsWith(source.id))
                         { 
+                            var texCoordArray = source.Item as float_array;
                             unprocessedTexCoords = toVec2Array(texCoordArray.Values);
-                            if (stride >= 0)
-                                stride++;
                         }
                         
-                        if (source.Item is float_array colorArray)
+                        if (colorSourceID.EndsWith(source.id))
                         {
-                            if (source.name is not null)
-                            {
-                                if (!colorArray.id.EndsWith(source.name) && !colorArray.id.EndsWith(source.name + "-array")) continue;
-                            }
-                            else if (!colorArray.id.EndsWith("color") && !colorArray.id.EndsWith("color-array"))
-                                continue;
+                            var colorArray = source.Item as float_array;
                             unprocessedColors = toVec3Array(colorArray.Values);
-                            if (stride >= 0)
-                                stride++;
                         }
                     }
 
                     //Zip all of the positions, normals, texture coordinates, & colors into a Vertex
                     //Add it to the list of vertices to be sent to the Model constructor
-                    for (var i = 0; i < unprocessedIndices.Length; i+=stride)
+                    for (var i = 0; i < unprocessedIndices.Length; i+=numAttributes)
                     {
                         var tempVertex = new Vertex();
                         if (positionOffset != -1)
@@ -212,7 +215,24 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                     
                 }
             }
+
+            ToModelSpace(ref vertexList);
+            
             return new Model(vertexList);
         }
+
+        /*
+        private List<Vertex> GetVertices(library_geometries lib_geom)
+        {
+            foreach (var geom in lib_geom.geometry)
+            {
+                if (geom.Item is not mesh mesh) continue;
+                foreach (var 
+                foreach (var source in mesh.source)
+            }
+        }
+        */
+        
+        
     }
 }

@@ -102,5 +102,56 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
             _vao.CreateIndexBuffer(processedIndices.ToArray());
             _numIndices = processedIndices.Count;
         }
+        
+        /// <summary>
+        /// Transforms the input vertices into Model space
+        /// </summary>
+        /// <param name="vertices">vertices to confine to ((-1.0, 1.0), (-1.0, 1.0), (-1.0, 1.0))</param>
+        /// <returns>vertices in Model space</returns>
+        protected static void ToModelSpace(ref List<Vertex> vertices)
+        {
+            /*To convert any model into the space of the unit Cube ((-1.0, 1.0), (-1.0, 1.0), (-1.0, 1.0))
+             * one must find the local minimums and maximums and scale on that 
+             */
+            
+            Vector3 minPos = Vector3.PositiveInfinity;
+            Vector3 maxPos = Vector3.NegativeInfinity;
+            Vector3 avgPos = Vector3.Zero;
+            foreach (var vertex in vertices)
+            {
+                maxPos.X = Math.Max(vertex.Position.X, maxPos.X);
+                maxPos.Y = Math.Max(vertex.Position.Y, maxPos.Y);
+                maxPos.Z = Math.Max(vertex.Position.Z, maxPos.Z);
+
+                minPos.X = Math.Min(vertex.Position.X, minPos.X);
+                minPos.Y = Math.Min(vertex.Position.Y, minPos.Y);
+                minPos.Z = Math.Min(vertex.Position.Z, minPos.Z);
+
+                avgPos += vertex.Position;
+
+            }
+
+            //this calculates the position of the model relative to the origin when loading in, this is ignored in the final model (for now)
+            avgPos /= vertices.Count;
+            
+            //we use the position to translate the model in its space to its space's origin
+            maxPos -= avgPos;
+            minPos -= avgPos;
+
+            //now that we're at (0, 0, 0), we can calculate the scale and scale it down by the largest dimension
+            var scaleX = maxPos.X - minPos.X;
+            var scaleY = maxPos.Y - minPos.Y;
+            var scaleZ = maxPos.Z - minPos.Z;
+
+            var scale = Math.Max(Math.Max(scaleX, scaleY), scaleZ);
+
+            foreach (var vertex in vertices)
+            {
+                vertex.Position /= Vector3.One * scale;
+            }
+            
+        }
+        
     }
+    
 }

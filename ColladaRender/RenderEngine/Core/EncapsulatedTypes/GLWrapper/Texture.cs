@@ -2,7 +2,6 @@
 using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL4;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
-using TextureWrapMode = OpenTK.Graphics.OpenGL.TextureWrapMode;
 
 namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes.GLWrapper
 {
@@ -24,7 +23,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes.GLWrapper
             _id = GL.GenTexture();
             Use(TextureUnit.Texture0);
             
-            //With the using() statement, the Bitmap image object that is loaded from the filepath is disposed automatically
+            //use a Bitmap image object that is loaded from the filepath; is disposed automatically
             using (var image = new Bitmap(filepath))
             {
                 //The image in OpenGL context has to be in UV space not SR, which is loaded from file
@@ -55,8 +54,9 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes.GLWrapper
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             
             //Wrap the textures both ways for UV values beyond 1.0 if ever needed in this renderer
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+            //Now needed for viewing certain models that make use of UVs from beyond 0.0 <-> 1.0
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.MirroredRepeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.MirroredRepeat);
             
             //Generate the mipmap for this image, then unbind the Texture2D context
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);

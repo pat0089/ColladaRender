@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using ColladaRender.RenderEngine.Core.EncapsulatedTypes;
 using ColladaRender.RenderEngine.Core;
-using ColladaRender.RenderEngine.Core.EncapsulatedTypes;
 using ColladaRender.RenderEngine.Core.RenderableObjects;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
@@ -29,15 +28,15 @@ namespace ColladaRender
 
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             
-            TextureManager.LoadTexture("crate", "RenderEngine/res/img/cowboy.png");
+            TextureManager.LoadTexture("crate", "RenderEngine/res/img/WS2_pln_guidplane.png");
 
-            _model = Model.Load(COLLADA.Load("RenderEngine/res/dae/cowboy.dae"));
+            _model = Model.Load(COLLADA.Load("RenderEngine/res/dae/WS2_pln_guidplane141.dae"));
             _light = new Light(Vector3.One * 3);
-            _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+            _camera = new Camera(Vector3.One, Size.X / (float)Size.Y);
             
             CursorGrabbed = true;
             
-            GL.ClearColor(Color.FromArgb(0, 0, 0));
+            GL.ClearColor(Color.FromArgb(240, 240, 240));
 
         }
 
@@ -67,38 +66,14 @@ namespace ColladaRender
 
             if (CursorGrabbed)
             {
-                _camera.Update(mouse);
+                _camera.Update(mouse, keyboard, timeElapsed);
             }
 
             if (keyboard[Keys.Escape])
             {
                 Close();
             }
-
-            if (keyboard[Keys.Space])
-            {
-                _camera.Move(Camera.Direction.Up, timeElapsed);
-            } else if (keyboard[Keys.LeftShift])
-            {
-                _camera.Move(Camera.Direction.Down, timeElapsed);
-            }
             
-            if (keyboard[Keys.W])
-            {
-                _camera.Move(Camera.Direction.Forward, timeElapsed);
-            } else if (keyboard[Keys.S])
-            {
-                _camera.Move(Camera.Direction.Backward, timeElapsed);
-            }
-            
-            if (keyboard[Keys.D])
-            {
-                _camera.Move(Camera.Direction.Right, timeElapsed);
-            } else if (keyboard[Keys.A])
-            {
-                _camera.Move(Camera.Direction.Left, timeElapsed);
-            }
-
             if (KeyboardState.IsKeyPressed(Keys.T))
             {
                 if (_model.TextureName == TextureManager.Default)
