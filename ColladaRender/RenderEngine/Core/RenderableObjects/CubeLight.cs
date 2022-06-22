@@ -7,7 +7,7 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
     /// <summary>
     /// Testing a combined cube and light object
     /// </summary>
-    public class CubeLight
+    public class CubeLight: SceneObject
     {
         private Cube _cube;
         private Light _light;

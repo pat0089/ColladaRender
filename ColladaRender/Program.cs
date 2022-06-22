@@ -30,7 +30,16 @@ namespace ColladaRender
 
             using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))
             {
-                window.Run();
+                try {
+
+                    window.Run();
+
+                }
+                catch (Exception e) { 
+                    
+                    Console.Error.WriteLine(e);
+
+                }
             }
         }
     }

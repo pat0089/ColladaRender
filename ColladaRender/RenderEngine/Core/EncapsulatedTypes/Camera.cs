@@ -12,15 +12,12 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
     /// <summary>
     /// Describes a camera in 3-D space
     /// </summary>
-    public class Camera
+    public class Camera: SceneObject
     {
-        private Quaternion _direction = Quaternion.Identity;
 
         private Vector2 _clickedMousePos = Vector2.Zero;
 
         private float _fieldOfView = MathHelper.PiOver3;
-
-        private bool _leftWasDown;
         
         /// <summary>
         /// FOV angle in degrees
@@ -37,27 +34,16 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
                 _fieldOfView = MathHelper.DegreesToRadians(degs);
             }
         }
-
-        private Vector3 _position;
         
         /// <summary>
         /// Position of the camera
         /// </summary>
-        public Vector3 Position
-        {
-            get
-            {
-                return _position;
-            } 
-            
-        }
+
         private float _aspectRatio;
 
         private float _sensitivity = 0.2f;
         
         private float _cameraSpeed = 1.5f;
-
-        private float _lengthFromCenter = 100.0f;
 
         private float _zoomPercentage = 1.0f;
         
@@ -83,7 +69,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         public Matrix4 ViewMatrix {
             get
             {
-                return Matrix4.LookAt(_position * (Vector3.One * (1.0f - _zoomPercentage) * _lengthFromCenter), Vector3.Zero, Vector3.UnitY);
+                return Matrix4.LookAt(position * (Vector3.One * _zoomPercentage), Vector3.Zero, Vector3.UnitY);
             }
         }
 
@@ -105,57 +91,40 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         /// <param name="aspectRatio">Aspect ratio of the screen</param>
         public Camera(Vector3 position, float aspectRatio)
         {
-            _position = position;
+            this.position = position;
             _aspectRatio = aspectRatio;
+            GlobalInputManager.RegisterMouseScroll(Zoom);
+            GlobalInputManager.RegisterButtonUp(ResetMovement, MouseButton.Left);
+            GlobalInputManager.RegisterButtonDown(StartMoveCamera, MouseButton.Left);
+            GlobalInputManager.RegisterButtonHeld(MoveCamera, MouseButton.Left);
         }
-        
-        /// <summary>
-        /// Update the eye direction
-        /// </summary>
-        /// <param name="mouseInput">Mouse state since last update</param>
-        /// <param name="keyboardInput">Keyboard state since last update</param>
-        /// <param name="deltaTime">Time elapsed since last update</param>
-        public void Update(MouseState mouseInput, KeyboardState keyboardInput, float deltaTime)
+
+        public void Zoom(GlobalInputManager.WindowArgs w, GlobalInputManager.GlobalInputContext ctx)
         {
-            
-            if (keyboardInput[Keys.LeftAlt])
-            {
-                if (mouseInput[MouseButton.Left])
-                {
-                    if (!_leftWasDown)
-                    {
-                        _clickedMousePos = mouseInput.Position;
-                        _leftWasDown = true;
-                    } else if (_leftWasDown)
-                    {
-                        var dragDelta = _clickedMousePos - mouseInput.Position;
-                        _clickedMousePos = mouseInput.Position;
+            _zoomPercentage = Math.Clamp(_zoomPercentage + 0.1f * ctx.mouse.ScrollDelta.Y, 0.01f, 1.0f);
+        }
 
-                        dragDelta.X = -dragDelta.X;
-                        var deltaDegrees = dragDelta * _sensitivity;
+        public void ResetMovement(GlobalInputManager.WindowArgs w, GlobalInputManager.GlobalInputContext ctx)
+        {
+            _clickedMousePos = Vector2.Zero;
+        }
 
-                        var q1 = Quaternion.FromAxisAngle(Vector3.UnitY, deltaDegrees.X * 0.01f);
-                        var q2 = Quaternion.FromAxisAngle(Vector3.UnitX, deltaDegrees.Y * 0.01f);
-                        var newDirection =  q1 * q2;
-                        _position = Vector3.Transform(_position, newDirection);
-                    }
-                }
-                else if (!mouseInput[MouseButton.Left])
-                {
-                    _clickedMousePos = Vector2.Zero;
-                }
-                
-                if (mouseInput.ScrollDelta.Length > 0.0f)
-                {
-                    //needs to be changed to a point along the lookat vector
-                    //FOV += mouseInput.ScrollDelta.Y;
+        public void StartMoveCamera(GlobalInputManager.WindowArgs w, GlobalInputManager.GlobalInputContext ctx)
+        {
+            _clickedMousePos = ctx.mouse.Position;
+        }
 
-                    _zoomPercentage = Math.Clamp(_zoomPercentage + 0.0001f * mouseInput.ScrollDelta.Y, 0.01f, 1.0f);
-                    
-                }
-                
-            }
-            
+        public void MoveCamera(GlobalInputManager.WindowArgs w, GlobalInputManager.GlobalInputContext ctx)
+        {
+            var dragDelta = _clickedMousePos - ctx.mouse.Position;
+            _clickedMousePos = ctx.mouse.Position;
+
+            var deltaDegrees = dragDelta * _sensitivity;
+
+            var q1 = Quaternion.FromAxisAngle(Vector3.UnitY, deltaDegrees.X * 0.01f);
+            var q2 = Quaternion.FromAxisAngle(Vector3.UnitX, deltaDegrees.Y * 0.01f);
+            var newDirection = q1 * q2;
+            position = Vector3.Transform(position, newDirection);
         }
 
         /// <summary>
@@ -166,30 +135,6 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         public void UpdateAspectRatio(int width, int height)
         {
             _aspectRatio = width / (float) height;
-        }
-
-        Vector3 GetSphericalCoordinates(Vector3 cartesian)
-        {
-            float r = cartesian.Length;
- 
-            float phi = MathF.Atan2(cartesian.Z / cartesian.X, cartesian.X);
-            float theta = MathF.Acos(cartesian.Y / r);
- 
-            if (cartesian.X < 0)
-                phi += MathF.PI;
- 
-            return new Vector3 (r, phi, theta);
-        }
-        
-        Vector3 GetCartesianCoordinates(Vector3 spherical)
-        {
-            Vector3 ret = new Vector3 ();
- 
-            ret.X = spherical.X * MathF.Cos (spherical.Z) * MathF.Cos (spherical.Y);
-            ret.Y = spherical.X * MathF.Sin (spherical.Z);
-            ret.Z = spherical.X * MathF.Cos (spherical.Z) * MathF.Sin (spherical.Y);
- 
-            return ret;
         }
         
     }

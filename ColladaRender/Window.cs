@@ -18,8 +18,9 @@ namespace ColladaRender
         private Camera _camera;
         private Model _model;
         private Light _light;
-        public Window(GameWindowSettings gws, NativeWindowSettings nws) : base(gws, nws) { }
-
+        public Window(GameWindowSettings gws, NativeWindowSettings nws) : base(gws, nws) {
+            GlobalInputManager.Init();
+        }
         protected override void OnLoad()
         {
             base.OnLoad();
@@ -32,7 +33,7 @@ namespace ColladaRender
 
             _model = Model.Load(COLLADA.Load("RenderEngine/res/dae/WS2_pln_guidplane141.dae"));
             _light = new Light(Vector3.One * 3);
-            _camera = new Camera(Vector3.One, Size.X / (float)Size.Y);
+            _camera = new Camera(Vector3.One * 3, Size.X / (float)Size.Y);
             
             CursorGrabbed = true;
             
@@ -46,14 +47,87 @@ namespace ColladaRender
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             //code using my objects
-            _model.Render(_camera.ViewMatrix, _camera.ProjectionMatrix, _camera.Position, _light);
+            _model.Render(_camera.ViewMatrix, _camera.ProjectionMatrix, _camera.position, _light);
             GL.Flush();
             SwapBuffers();
+        }
+
+        protected override void OnKeyDown(KeyboardKeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            var context = new GlobalInputManager.GlobalInputContext()
+            {
+                keyboard = KeyboardState,
+                mouse = MouseState
+            };
+            GlobalInputManager.OnKeyDown(e, context);
+        }
+
+        protected override void OnKeyUp(KeyboardKeyEventArgs e)
+        {
+            base.OnKeyUp(e);
+            var context = new GlobalInputManager.GlobalInputContext()
+            {
+                keyboard = KeyboardState,
+                mouse = MouseState
+            };
+            GlobalInputManager.OnKeyUp(e, context);
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+            var context = new GlobalInputManager.GlobalInputContext()
+            {
+                keyboard = KeyboardState,
+                mouse = MouseState
+            };
+            GlobalInputManager.OnMouseDown(e, context);
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseUp(e);
+            var context = new GlobalInputManager.GlobalInputContext()
+            {
+                keyboard = KeyboardState,
+                mouse = MouseState
+            };
+            GlobalInputManager.OnMouseUp(e, context);
+        }
+
+        protected override void OnMouseMove(MouseMoveEventArgs e)
+        {
+            base.OnMouseMove(e);
+            var context = new GlobalInputManager.GlobalInputContext()
+            {
+                keyboard = KeyboardState,
+                mouse = MouseState
+            };
+            GlobalInputManager.OnMouseMove(e, context);
+        }
+
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            var context = new GlobalInputManager.GlobalInputContext()
+            {
+                keyboard = KeyboardState,
+                mouse = MouseState
+            };
+            GlobalInputManager.OnMouseWheel(e, context);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
+            var winArgs = new GlobalInputManager.WindowArgs
+            {
+                window_focused = IsFocused,
+                cursor_grabbed = CursorGrabbed,
+                delta_time = args.Time
+            };
+            GlobalInputManager.Instance.Update(winArgs);
 
             if (!IsFocused)
             {
@@ -64,10 +138,7 @@ namespace ColladaRender
             var keyboard = KeyboardState;
             var mouse = MouseState;
 
-            if (CursorGrabbed)
-            {
-                _camera.Update(mouse, keyboard, timeElapsed);
-            }
+
 
             if (keyboard[Keys.Escape])
             {

@@ -7,13 +7,19 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
     /// <summary>
     /// Contains the basic sub-objects and data needed to be a renderable object, as well as a couple of dynamic built in rendering functions
     /// </summary>
-    public class RenderableObject
+    public class RenderableObject: SceneObject
     {
         protected VertexArrayObject _vao;
         protected Shader _shader = DefaultResources.DefaultShader;
         public string TextureName = TextureManager.Default;
-        protected Matrix4 _modelTransform = Matrix4.CreateTranslation(0,0,0);
         protected int _numIndices;
+
+
+        public void Render()
+        {
+            _vao.BindAllAttribs();
+        }
+
 
         /// <summary>
         /// The base rendering function for a 3-D object
@@ -25,7 +31,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
             _vao.BindAllAttribs();
             _shader.Activate();
 
-            _shader.SetMat4("uModel", _modelTransform);
+            _shader.SetMat4("uModel", Matrix4.CreateTranslation(position));
             _shader.SetMat4("uView", view);
             _shader.SetMat4("uProjection", projection);
 
@@ -48,7 +54,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
             _vao.BindAllAttribs();
             _shader.Activate();
 
-            _shader.SetMat4("uModel", _modelTransform);
+            _shader.SetMat4("uModel", Matrix4.CreateTranslation(this.position));
             _shader.SetMat4("uView", view);
             _shader.SetMat4("uProjection",projection);
 
@@ -62,24 +68,6 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
 
             GL.DrawElements(PrimitiveType.Triangles, _numIndices, DrawElementsType.UnsignedInt, 0);
             _vao.UnbindAllAttribs();
-        }
-
-        /// <summary>
-        /// Sets the position of an object in 3-D space
-        /// </summary>
-        /// <param name="toSet">Position to set to</param>
-        public void SetPosition(Vector3 toSet)
-        {
-            _modelTransform = Matrix4.CreateTranslation(toSet);
-        }
-        
-        /// <summary>
-        /// Translate the position of an object in 3-D space
-        /// </summary>
-        /// <param name="toTranslateBy">Relative position to translate by</param>
-        public void Translate(Vector3 toTranslateBy)
-        {
-            _modelTransform += Matrix4.CreateTranslation(toTranslateBy);
         }
     }
 }
