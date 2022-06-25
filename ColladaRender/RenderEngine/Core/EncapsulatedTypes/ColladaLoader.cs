@@ -42,7 +42,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
 
 namespace ColladaRender.RenderEngine.Core.RenderableObjects
 {
-    
+
     public partial class Model : RenderableObject
     {
         /// <summary>
@@ -53,7 +53,7 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
         public static Model Load(COLLADA model)
         {
             //Console.Out.WriteLine(JsonConvert.SerializeObject(model, Formatting.Indented, new JsonConverter[] {new StringEnumConverter()}));
-            
+
             var unprocessedPositions = new Vector3[] { };
             var unprocessedNormals = new Vector3[] { };
             var unprocessedTexCoords = new Vector2[] { };
@@ -71,168 +71,164 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
             int colorOffset = -1;
 
             int numAttributes = 1;
-            
+
             var vertexList = new List<Vertex>();
-            int stride = 0;
 
             //Iterate on the object array in Items[] for library_geometries
             foreach (var item in model.Items)
             {
-                //Skip if is not library_geometries 
-                if (item is not library_geometries geometries) continue;
-                
-                //Iterate in the library_geometries for mesh data
-                foreach (var geom in geometries.geometry)
+                switch (item)
                 {
-                    //Skip if is not mesh data
-                    if (geom.Item is not mesh mesh) continue;
-
-                    //Search Items[] for geom indices
-                    foreach (var meshItem in mesh.Items)
-                    {
-                        positionSourceID = mesh.vertices.input[0].source;
-                        
-                        if (meshItem is triangles)
+                    case library_geometries lib:
+                        //Iterate in the library_geometries for mesh data
+                        foreach (var geom in lib.geometry)
                         {
-                            var triangles = meshItem as triangles;
-                            foreach (var inputItem in triangles.input)
+                            //Skip if is not mesh data
+                            if (geom.Item is not mesh mesh) continue;
+
+                            //Search Items[] for geom indices
+                            foreach (var meshItem in mesh.Items)
                             {
-                                if (inputItem.semantic == "VERTEX")
-                                {
-                                    positionOffset = (int) inputItem.offset;
-                                }
+                                positionSourceID = mesh.vertices.input[0].source;
 
-                                if (inputItem.semantic == "NORMAL")
+                                if (meshItem is triangles)
                                 {
-                                    normalOffset = (int) inputItem.offset;
-                                    normalSourceID = inputItem.source;
-                                }
+                                    var triangles = meshItem as triangles;
+                                    foreach (var inputItem in triangles.input)
+                                    {
+                                        if (inputItem.semantic == "VERTEX")
+                                        {
+                                            positionOffset = (int)inputItem.offset;
+                                        }
 
-                                if (inputItem.semantic == "TEXCOORD")
-                                {
-                                    texCoordOffset = (int) inputItem.offset;
-                                    texCoordSourceID = inputItem.source;
-                                }
+                                        if (inputItem.semantic == "NORMAL")
+                                        {
+                                            normalOffset = (int)inputItem.offset;
+                                            normalSourceID = inputItem.source;
+                                        }
 
-                                if (inputItem.semantic == "COLOR")
+                                        if (inputItem.semantic == "TEXCOORD")
+                                        {
+                                            texCoordOffset = (int)inputItem.offset;
+                                            texCoordSourceID = inputItem.source;
+                                        }
+
+                                        if (inputItem.semantic == "COLOR")
+                                        {
+                                            colorOffset = (int)inputItem.offset;
+                                            colorSourceID = inputItem.source;
+                                        }
+                                    }
+                                    numAttributes = triangles.input.Length;
+                                    unprocessedIndices = triangles.p.Split(' ').Select(n => Convert.ToInt32(n)).ToArray();
+
+                                }
+                                else if (meshItem is polylist)
                                 {
-                                    colorOffset = (int) inputItem.offset;
-                                    colorSourceID = inputItem.source;
+                                    var polylist = meshItem as polylist;
+                                    foreach (var inputItem in polylist.input)
+                                    {
+                                        if (inputItem.semantic == "VERTEX")
+                                        {
+                                            positionOffset = (int)inputItem.offset;
+                                        }
+
+                                        if (inputItem.semantic == "NORMAL")
+                                        {
+                                            normalOffset = (int)inputItem.offset;
+                                            normalSourceID = inputItem.source;
+                                        }
+
+                                        if (inputItem.semantic == "TEXCOORD")
+                                        {
+                                            texCoordOffset = (int)inputItem.offset;
+                                            texCoordSourceID = inputItem.source;
+                                        }
+
+                                        if (inputItem.semantic == "COLOR")
+                                        {
+                                            colorOffset = (int)inputItem.offset;
+                                            colorSourceID = inputItem.source;
+                                        }
+                                    }
+
+                                    numAttributes = polylist.input.Length;
+                                    unprocessedIndices = polylist.p.Split(' ').Select(n => Convert.ToInt32(n)).ToArray();
                                 }
                             }
-                            numAttributes = triangles.input.Length;
-                            unprocessedIndices = triangles.p.Split(' ').Select(n => Convert.ToInt32(n)).ToArray();
-                            
-                        } 
-                        else if (meshItem is polylist)
-                        {
-                            var polylist = meshItem as polylist;
-                            foreach (var inputItem in polylist.input)
+
+                            //Iterate on the source[] for the float array information for each attribute
+                            foreach (var source in mesh.source)
                             {
-                                if (inputItem.semantic == "VERTEX")
+                                if (positionSourceID.EndsWith(source.id))
                                 {
-                                    positionOffset = (int) inputItem.offset;
+                                    var positionArray = source.Item as float_array;
+                                    unprocessedPositions = toVec3Array(positionArray.Values);
                                 }
 
-                                if (inputItem.semantic == "NORMAL")
+                                if (normalSourceID.EndsWith(source.id))
                                 {
-                                    normalOffset = (int) inputItem.offset;
-                                    normalSourceID = inputItem.source;
+                                    var normalArray = source.Item as float_array;
+                                    unprocessedNormals = toVec3Array(normalArray.Values);
                                 }
 
-                                if (inputItem.semantic == "TEXCOORD")
+                                if (texCoordSourceID.EndsWith(source.id))
                                 {
-                                    texCoordOffset = (int) inputItem.offset;
-                                    texCoordSourceID = inputItem.source;
+                                    var texCoordArray = source.Item as float_array;
+                                    unprocessedTexCoords = toVec2Array(texCoordArray.Values);
                                 }
 
-                                if (inputItem.semantic == "COLOR")
+                                if (colorSourceID.EndsWith(source.id))
                                 {
-                                    colorOffset = (int) inputItem.offset;
-                                    colorSourceID = inputItem.source;
+                                    var colorArray = source.Item as float_array;
+                                    unprocessedColors = toVec3Array(colorArray.Values);
                                 }
                             }
-                            
-                            numAttributes = polylist.input.Length;
-                            unprocessedIndices = polylist.p.Split(' ').Select(n => Convert.ToInt32(n)).ToArray();
-                        }
-                    }
 
-                    //Iterate on the source[] for the float array information for each attribute
-                    foreach (var source in mesh.source)
-                    {
-                        if (positionSourceID.EndsWith(source.id))
-                        {
-                            var positionArray = source.Item as float_array;
-                            unprocessedPositions = toVec3Array(positionArray.Values);
-                        }
+                            //Zip all of the positions, normals, texture coordinates, & colors into a Vertex
+                            //Add it to the list of vertices to be sent to the Model constructor
+                            for (var i = 0; i < unprocessedIndices.Length; i += numAttributes)
+                            {
+                                var tempVertex = new Vertex();
+                                if (positionOffset != -1)
+                                {
+                                    tempVertex.Position = unprocessedPositions[unprocessedIndices[i + positionOffset] % unprocessedPositions.Length];
+                                }
 
-                        if (normalSourceID.EndsWith(source.id))
-                        {
-                            var normalArray = source.Item as float_array;
-                            unprocessedNormals = toVec3Array(normalArray.Values);
-                        }
+                                if (normalOffset != -1)
+                                {
+                                    tempVertex.Normal = unprocessedNormals[unprocessedIndices[i + normalOffset] % unprocessedNormals.Length];
+                                }
 
-                        if (texCoordSourceID.EndsWith(source.id))
-                        { 
-                            var texCoordArray = source.Item as float_array;
-                            unprocessedTexCoords = toVec2Array(texCoordArray.Values);
-                        }
-                        
-                        if (colorSourceID.EndsWith(source.id))
-                        {
-                            var colorArray = source.Item as float_array;
-                            unprocessedColors = toVec3Array(colorArray.Values);
-                        }
-                    }
+                                if (texCoordOffset != -1)
+                                {
+                                    tempVertex.TexCoord = unprocessedTexCoords[unprocessedIndices[i + texCoordOffset] % unprocessedTexCoords.Length];
+                                }
 
-                    //Zip all of the positions, normals, texture coordinates, & colors into a Vertex
-                    //Add it to the list of vertices to be sent to the Model constructor
-                    for (var i = 0; i < unprocessedIndices.Length; i+=numAttributes)
-                    {
-                        var tempVertex = new Vertex();
-                        if (positionOffset != -1)
-                        {
-                            tempVertex.Position = unprocessedPositions[unprocessedIndices[i + positionOffset] % unprocessedPositions.Length];
-                        }
+                                if (colorOffset != -1)
+                                {
+                                    tempVertex.Color = unprocessedColors[unprocessedIndices[i + colorOffset] % unprocessedColors.Length];
+                                }
+                                vertexList.Add(tempVertex);
+                            }
 
-                        if (normalOffset != -1)
-                        {
-                            tempVertex.Normal = unprocessedNormals[unprocessedIndices[i + normalOffset] % unprocessedNormals.Length];
                         }
+                        break;
 
-                        if (texCoordOffset != -1)
-                        {
-                            tempVertex.TexCoord = unprocessedTexCoords[unprocessedIndices[i + texCoordOffset] % unprocessedTexCoords.Length];
-                        }
-                        
-                        if (colorOffset != -1)
-                        {
-                            tempVertex.Color = unprocessedColors[unprocessedIndices[i + colorOffset] % unprocessedColors.Length];
-                        }
-                        vertexList.Add(tempVertex);
-                    }
-                    
+                    case library_materials library:
+                        break;
+                    case library_animations:
+                        break;
+                    case library_animation_clips:
+                        break;
+                    default:
+                        continue;
                 }
             }
-
             ToModelSpace(ref vertexList);
-            
+
             return new Model(vertexList);
         }
-
-        /*
-        private List<Vertex> GetVertices(library_geometries lib_geom)
-        {
-            foreach (var geom in lib_geom.geometry)
-            {
-                if (geom.Item is not mesh mesh) continue;
-                foreach (var 
-                foreach (var source in mesh.source)
-            }
-        }
-        */
-        
         
     }
 }

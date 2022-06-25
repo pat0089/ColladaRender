@@ -55,8 +55,8 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes.GLWrapper
             
             //Wrap the textures both ways for UV values beyond 1.0 if ever needed in this renderer
             //Now needed for viewing certain models that make use of UVs from beyond 0.0 <-> 1.0
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.MirroredRepeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.MirroredRepeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
             
             //Generate the mipmap for this image, then unbind the Texture2D context
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);

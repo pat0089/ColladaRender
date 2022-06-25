@@ -30,8 +30,182 @@
       <None Update="RenderEngine\res\dae\prism.dae">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="RenderEngine\res\dae\Soi_Armour_A.dae">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="RenderEngine\res\dae\sphere.dae">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_AO.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_BaseColor.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_Diffuse.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_Glossiness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_Metallic.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_NOpenGL.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_Normal.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_Roughness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_Specular.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Metal_AO.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Metal_BaseColorOpacity.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Metal_Diffuse.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Metal_Glossiness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Metal_Metallic.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Metal_NOpenGL.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Metal_Normal.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Metal_Opacity.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Metal_Roughness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Metal_Specular.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_AO.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_BaseColor.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_Diffuse.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_Glossiness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_Metallic.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_NOpenGL.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_Normal.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_Roughness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_Specular.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Metal_AO.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Metal_BaseColorOpacity.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Metal_Diffuse.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Metal_Glossiness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Metal_Metallic.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Metal_NOpenGL.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Metal_Normal.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Metal_Opacity.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Metal_Roughness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Metal_Specular.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Cloth_AO.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Cloth_BaseColor.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Cloth_Diffuse.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Cloth_Glossiness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Cloth_Metallic.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Cloth_NOpenGL.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Cloth_Normal.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Cloth_Roughness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Cloth_Specular.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_AO.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_BaseColorOpacity.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_Diffuse.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_Glossiness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_Metallic.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_NOpenGL.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_Normal.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_Opacity.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_Roughness.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_Specular.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\dae\UtahTeapot.dae">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -61,6 +235,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\img\cowboy.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\img\textures\T_Armour_Clean_Metal_BaseColorOpacity.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\img\WS2_pln_guidplane.png">

@@ -101,7 +101,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
 
         public void Zoom(GlobalInputManager.WindowArgs w, GlobalInputManager.GlobalInputContext ctx)
         {
-            _zoomPercentage = Math.Clamp(_zoomPercentage + 0.1f * ctx.mouse.ScrollDelta.Y, 0.01f, 1.0f);
+            _zoomPercentage = Math.Clamp(_zoomPercentage + -0.1f * ctx.mouse.ScrollDelta.Y, 0.01f, 1.0f);
         }
 
         public void ResetMovement(GlobalInputManager.WindowArgs w, GlobalInputManager.GlobalInputContext ctx)
@@ -119,7 +119,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
             var dragDelta = _clickedMousePos - ctx.mouse.Position;
             _clickedMousePos = ctx.mouse.Position;
 
-            var deltaDegrees = dragDelta * _sensitivity;
+            var deltaDegrees = dragDelta * _sensitivity; 
 
             var q1 = Quaternion.FromAxisAngle(Vector3.UnitY, deltaDegrees.X * 0.01f);
             var q2 = Quaternion.FromAxisAngle(Vector3.UnitX, deltaDegrees.Y * 0.01f);
