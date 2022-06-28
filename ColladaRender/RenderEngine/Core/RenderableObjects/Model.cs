@@ -18,6 +18,12 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
             internal List<Vertex> _vertices = new();
 
             internal List<int> _indices = new();
+
+            /// <summary>
+            /// Container class for a list of Vertex objects (which may contain duplicates)
+            /// Duplicate vertices are removed upon construction
+            /// </summary>
+            /// <param name="vertices">List of vertices to process into a mesh</param>
             public Mesh(List<Vertex> vertices)
             {
                 var processedPositions = new List<Vector3>();
@@ -61,25 +67,20 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
         }
 
         Mesh _mesh = null;
-
-
         
         /// <summary>
-        /// Creates a Model object based on a list of Vertex objects (which may contain duplicates) for stitching together of sides
+        /// Creates a Model object based on a Mesh
         /// </summary>
-        /// <param name="toLoad">Vertex list to load data from</param>
-        public Model(List<Vertex> toLoad)
+        public Model(Mesh mesh)
         {
-            _vao = new VertexArrayObject();
-            _shader = DefaultResources.ModelShader;
-            _mesh = new Mesh(toLoad);
+            _mesh = mesh;
 
             var processedPositions = new List<Vector3>();
             var processedNormals = new List<Vector3>();
             var processedTexCoords = new List<Vector2>();
             var processedColors = new List<Vector3>();
 
-            //Strip the values from each vertex
+            //Strip the values from each vertex to bind to rendering context
             foreach (var curVertex in _mesh._vertices)
             {
                 processedPositions.Add(curVertex.Position);
@@ -96,7 +97,7 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
             _vao.CreateIndexBuffer(_mesh._indices.ToArray());
             _numIndices = _mesh._indices.Count;
         }
-        
+
         /// <summary>
         /// Transforms the input vertices into Model space
         /// </summary>
@@ -122,7 +123,6 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                 minPos.Z = Math.Min(vertex.Position.Z, minPos.Z);
 
                 avgPos += vertex.Position;
-
             }
 
             //this calculates the position of the model relative to the origin when loading in, this is ignored in the final model (for now)
@@ -139,6 +139,7 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
 
             var scale = Math.Max(Math.Max(scaleX, scaleY), scaleZ);
 
+            //scale down to model space and translate to the origin (such that arcball rotation is around the center of the model's mesh)
             foreach (var vertex in vertices)
             {
                 vertex.Position /= Vector3.One * scale;

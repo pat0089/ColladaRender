@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
@@ -11682,10 +11683,10 @@ public partial class float_array {
             }
             return field;
         }
-        set
-        {
-            Values = value.Split(' ').Select(x => double.Parse(x)).ToArray();
-        }
+            set
+            {
+                Values = value.Replace("\n", "").Replace("\r", "").Split(' ').Select(x => double.Parse(x)).ToArray();
+            }
     }
     
     /// <remarks/>

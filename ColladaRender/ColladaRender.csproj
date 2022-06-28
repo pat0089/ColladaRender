@@ -21,6 +21,9 @@
       <None Update="RenderEngine\res\dae\cube.dae">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="RenderEngine\res\dae\Cup.dae">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="RenderEngine\res\dae\IcoSphere.dae">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -36,11 +39,29 @@
       <None Update="RenderEngine\res\dae\sphere.dae">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="RenderEngine\res\dae\textures\Cup AO.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\Cup Color.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\Cup Diffuse.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\Cup Metallic.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\Cup Normal Map.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\Cup Reflections.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\textures\Cup Roughness.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_AO.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_BaseColor.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\dae\textures\T_Armour_Battered_Cloth_Diffuse.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -94,9 +115,6 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_AO.png">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_BaseColor.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\dae\textures\T_Armour_Clean_Cloth_Diffuse.png">
@@ -205,6 +223,9 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_Specular.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\dae\T_Armour_Clean_Metal_BaseColorOpacity.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\dae\UtahTeapot.dae">

@@ -52,7 +52,7 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
         /// <returns>Model from the information in the COLLADA object</returns>
         public static Model Load(COLLADA model)
         {
-            //Console.Out.WriteLine(JsonConvert.SerializeObject(model, Formatting.Indented, new JsonConverter[] {new StringEnumConverter()}));
+            #region Mesh
 
             var unprocessedPositions = new Vector3[] { };
             var unprocessedNormals = new Vector3[] { };
@@ -73,6 +73,17 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
             int numAttributes = 1;
 
             var vertexList = new List<Vertex>();
+
+            #endregion
+
+            #region Materials
+
+            var material_ids = new List<int>();
+            var material_names = new Dictionary<int, string>();
+            var material_effects = new Dictionary<int, string>();
+            var material_textures = new Dictionary<int, string>();
+
+            #endregion
 
             //Iterate on the object array in Items[] for library_geometries
             foreach (var item in model.Items)
@@ -214,20 +225,22 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
 
                         }
                         break;
-
-                    case library_materials library:
+                    case library_materials lib:
                         break;
-                    case library_animations:
+                    case library_images lib:
                         break;
-                    case library_animation_clips:
+                    case library_effects lib:
+                        break;
+                    case library_animations lib:
+                        break;
+                    case library_animation_clips lib:
                         break;
                     default:
                         continue;
                 }
             }
-            ToModelSpace(ref vertexList);
 
-            return new Model(vertexList);
+            return new Model(new Mesh(vertexList));
         }
         
     }

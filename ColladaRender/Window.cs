@@ -29,8 +29,6 @@ namespace ColladaRender
 
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             
-            TextureManager.LoadTexture("crate", "RenderEngine/res/dae/textures/T_Armour_Worn_Metal_BaseColorOpacity.png");
-
             _model = Model.Load(COLLADA.Load("RenderEngine/res/dae/Soi_Armour_A.dae"));
             _light = new Light(Vector3.One * 3);
             _camera = new Camera(Vector3.One, Size.X / (float)Size.Y);
