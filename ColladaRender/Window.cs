@@ -3,6 +3,7 @@ using ColladaRender.RenderEngine.Core.EncapsulatedTypes;
 using ColladaRender.RenderEngine.Core;
 using ColladaRender.RenderEngine.Core.RenderableObjects;
 using OpenTK.Graphics.OpenGL;
+using TextureUnit = OpenTK.Graphics.OpenGL4.TextureUnit;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
@@ -24,18 +25,25 @@ namespace ColladaRender
         protected override void OnLoad()
         {
             base.OnLoad();
-            
+
             GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Blend);
 
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            
+
+            TextureManager.LoadTexture("skin", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_BaseColorOpacity.png", TextureUnit.Texture0);
+            TextureManager.LoadTexture("normals", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_Normal.png", TextureUnit.Texture1);
+            TextureManager.LoadTexture("metallic", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_Metallic.png", TextureUnit.Texture2);
+            TextureManager.LoadTexture("roughness", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_Roughness.png", TextureUnit.Texture3);
+            TextureManager.LoadTexture("ao", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_AO.png", TextureUnit.Texture4);
+
             _model = Model.Load(COLLADA.Load("RenderEngine/res/dae/Soi_Armour_A.dae"));
-            _light = new Light(Vector3.One * 3);
+            _light = new Light(Vector3.UnitY * 2);
             _camera = new Camera(Vector3.One, Size.X / (float)Size.Y);
             
-            CursorGrabbed = true;
-            
-            GL.ClearColor(Color.FromArgb(240, 240, 240));
+            CursorGrabbed = true;            
+
+            GL.ClearColor(Color.FromArgb(0, 0, 0));
 
         }
 
@@ -147,7 +155,7 @@ namespace ColladaRender
             {
                 if (_model.TextureName == TextureManager.Default)
                 {
-                    _model.TextureName = "crate";
+                    _model.TextureName = "skin";
                 }
                 else
                 {

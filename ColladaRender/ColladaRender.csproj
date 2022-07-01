@@ -225,9 +225,6 @@
       <None Update="RenderEngine\res\dae\textures\T_Armour_Worn_Metal_Specular.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="RenderEngine\res\dae\T_Armour_Clean_Metal_BaseColorOpacity.png">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
       <None Update="RenderEngine\res\dae\UtahTeapot.dae">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -247,6 +244,12 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\GLSLShaders\modelShader.vert">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\GLSLShaders\pbr.frag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RenderEngine\res\GLSLShaders\pbr.vert">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="RenderEngine\res\img\container.png">

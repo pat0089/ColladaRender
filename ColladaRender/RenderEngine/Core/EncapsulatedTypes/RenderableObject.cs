@@ -31,7 +31,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
             _vao.BindAllAttribs();
             _shader.Activate();
 
-            _shader.SetMat4("uModel", Matrix4.CreateTranslation(position));
+            _shader.SetMat4("uModel", Matrix4.CreateTranslation(position) * Matrix4.CreateScale(scale));
             _shader.SetMat4("uView", view);
             _shader.SetMat4("uProjection", projection);
 
@@ -54,15 +54,15 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
             _vao.BindAllAttribs();
             _shader.Activate();
 
-            _shader.SetMat4("uModel", Matrix4.CreateTranslation(this.position));
+            _shader.SetMat4("uModel", Matrix4.CreateTranslation(position));
             _shader.SetMat4("uView", view);
             _shader.SetMat4("uProjection",projection);
 
-            if (_shader == DefaultResources.ModelShader)
+            if (_shader == DefaultResources.ModelShader || _shader == DefaultResources.PBRShader)
             {
                 _shader.SetVec3("uLightColor", light.Color);
                 _shader.SetVec3("uLightPosition", light.Position);
-                _shader.SetFloat("uLightIntensity", light.Intensity);
+                if (_shader == DefaultResources.ModelShader) _shader.SetFloat("uLightIntensity", light.Intensity);
                 _shader.SetVec3("uViewPos", camPosition);
             }
 

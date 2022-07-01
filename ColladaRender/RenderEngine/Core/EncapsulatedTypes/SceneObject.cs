@@ -13,6 +13,8 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
 
         internal Quaternion rotation = Quaternion.Identity;
 
+        internal Vector3 scale = Vector3.One;
+
         public void Rotate(Quaternion rotation)
         {
             this.rotation = this.rotation * rotation;
@@ -26,6 +28,11 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         public void SetPosition(Vector3 position)
         {
             this.position = position;
+        }
+
+        public void SetScale(Vector3 scale)
+        {
+            this.scale = scale;
         }
     }
 }

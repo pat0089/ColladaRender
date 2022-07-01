@@ -13,14 +13,14 @@ namespace ColladaRender.RenderEngine.Core
         static TextureManager()
         {
             Default = "Default";
-            LoadTexture(Default, "RenderEngine/res/img/pixel.bmp");
+            LoadTexture(Default, "RenderEngine/res/img/pixel.bmp", TextureUnit.Texture0);
         }
 
-        public static void LoadTexture(string name, string filepath)
+        public static void LoadTexture(string name, string filepath, TextureUnit textureUnit)
         {
             Textures.Add(name, new Texture(filepath));
             SetTexture(name);
-            UseTexture(TextureUnit.Texture0);
+            UseTexture(textureUnit);
         }
 
         public static void UseTexture(TextureUnit textureUnit)

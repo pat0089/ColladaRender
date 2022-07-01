@@ -5,6 +5,7 @@ using System.Linq;
 using ColladaRender.RenderEngine.Core.EncapsulatedTypes;
 using ColladaRender.RenderEngine.Core.EncapsulatedTypes.GLWrapper;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace ColladaRender.RenderEngine.Core.RenderableObjects
 {
@@ -18,6 +19,8 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
             internal List<Vertex> _vertices = new();
 
             internal List<int> _indices = new();
+
+            internal Vector3 _avgPos = Vector3.Zero;
 
             /// <summary>
             /// Container class for a list of Vertex objects (which may contain duplicates)
@@ -62,18 +65,27 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                 }
 
                 _vertices = vertexSet.ToList();
-                ToModelSpace(ref _vertices);
+                ToModelSpace(ref _vertices, out _avgPos);
             }
         }
 
         Mesh _mesh = null;
-        
+
         /// <summary>
         /// Creates a Model object based on a Mesh
         /// </summary>
         public Model(Mesh mesh)
         {
+            GlobalInputManager.RegisterKeyDown((x, y) => {
+                _shader = (_shader == DefaultResources.PBRShader) ? DefaultResources.ModelShader: DefaultResources.PBRShader;
+                }, Keys.M);
+
+
             _mesh = mesh;
+            _vao = new VertexArrayObject();
+            _shader = DefaultResources.PBRShader;
+
+            //position = -mesh._avgPos;
 
             var processedPositions = new List<Vector3>();
             var processedNormals = new List<Vector3>();
@@ -103,15 +115,16 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
         /// </summary>
         /// <param name="vertices">vertices to confine to ((-1.0, 1.0), (-1.0, 1.0), (-1.0, 1.0))</param>
         /// <returns>vertices in Model space</returns>
-        protected static void ToModelSpace(ref List<Vertex> vertices)
+        protected static void ToModelSpace(ref List<Vertex> vertices, out Vector3 avgPos)
         {
             /*To convert any model into the space of the unit Cube ((-1.0, 1.0), (-1.0, 1.0), (-1.0, 1.0))
-             * one must find the local minimums and maximums and scale on that 
+             * one must find the local minimums and maximums and scale on that
+             * then translate on the average position to center the model
              */
             
             Vector3 minPos = Vector3.PositiveInfinity;
             Vector3 maxPos = Vector3.NegativeInfinity;
-            Vector3 avgPos = Vector3.Zero;
+            avgPos = Vector3.Zero;
             foreach (var vertex in vertices)
             {
                 maxPos.X = Math.Max(vertex.Position.X, maxPos.X);
@@ -139,12 +152,17 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
 
             var scale = Math.Max(Math.Max(scaleX, scaleY), scaleZ);
 
+            
             //scale down to model space and translate to the origin (such that arcball rotation is around the center of the model's mesh)
             foreach (var vertex in vertices)
             {
                 vertex.Position /= Vector3.One * scale;
-                vertex.Position -= avgPos;
+                vertex.Position -= avgPos/2;
+                //vertex.Normal -= avgPos.Normalized() / 2;
+
             }
+            
+            
             
         }
 

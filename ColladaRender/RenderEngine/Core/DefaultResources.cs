@@ -7,7 +7,8 @@ namespace ColladaRender.RenderEngine.Core
     /// The default resources of the rendering engine
     /// </summary>
     public static class DefaultResources
-    { 
+    {
+        public static Shader PBRShader { get; }
         public static Shader ModelShader { get; }
         public static Shader LightShader { get; }
         public static Shader DefaultShader { get; }
@@ -22,6 +23,10 @@ namespace ColladaRender.RenderEngine.Core
             
             ModelShader =  new Shader("RenderEngine/res/GLSLShaders/modelShader.vert",
                 "RenderEngine/res/GLSLShaders/modelShader.frag");
+
+            PBRShader = new Shader("RenderEngine/res/GLSLShaders/pbr.vert",
+                "RenderEngine/res/GLSLShaders/pbr.frag"
+                );
         }
     }
 }

@@ -18,8 +18,8 @@ namespace ColladaRender
             }
             else
             {
-                width = 800;
-                height = 600;
+                width = 1280;
+                height = 920;
                 title = "Testing, testing, 123!";
             }
             var nativeWindowSettings = new NativeWindowSettings()
