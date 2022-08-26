@@ -22,7 +22,7 @@ const float PI = 3.14159265359;
 
 vec3 getNormalFromMap()
 {
-    vec3 tangentNormal = texture(uNormalMap, vTexCoord).xyz * 2.0 - 1.0;
+    vec3 tangentNormal = normalize(texture(uNormalMap, vTexCoord).xyz * 2.0 - 1.0);
 
     vec3 Q1  = dFdx(FragPosition);
     vec3 Q2  = dFdy(FragPosition);
@@ -80,6 +80,7 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 void main(void) {
 
     vec3 albedo     = pow(texture(uAlbedoMap, vTexCoord).rgb, vec3(2.2));
+    float alpha     = texture(uAlbedoMap, vTexCoord).a;
     float metallic  = texture(uMetallicMap, vTexCoord).r;
     float roughness = texture(uRoughnessMap, vTexCoord).r;
     float ao        = texture(uAOMap, vTexCoord).r;
@@ -128,6 +129,7 @@ void main(void) {
     
     // ambient lighting (note that the next IBL tutorial will replace 
     // this ambient lighting with environment lighting).
+    //vec3(0.03) * albedo * ao;
     vec3 ambient = vec3(0.03) * albedo * ao;
     
     vec3 color = ambient + Lo;
@@ -137,5 +139,5 @@ void main(void) {
     // gamma correct
     color = pow(color, vec3(1.0/2.2)); 
 
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(color, alpha);
 }

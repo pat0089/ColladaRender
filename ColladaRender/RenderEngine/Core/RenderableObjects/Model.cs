@@ -150,15 +150,15 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
             var scaleY = maxPos.Y - minPos.Y;
             var scaleZ = maxPos.Z - minPos.Z;
 
-            var scale = Math.Max(Math.Max(scaleX, scaleY), scaleZ);
+            //var scale = Math.Max(Math.Max(scaleX, scaleY), scaleZ);
 
             
             //scale down to model space and translate to the origin (such that arcball rotation is around the center of the model's mesh)
             foreach (var vertex in vertices)
             {
-                vertex.Position /= Vector3.One * scale;
-                vertex.Position -= avgPos/2;
-                //vertex.Normal -= avgPos.Normalized() / 2;
+                //vertex.Position /= Vector3.One * scale;
+                vertex.Position -= avgPos;
+                //vertex.Normal = vertex.Normal * ;
 
             }
             

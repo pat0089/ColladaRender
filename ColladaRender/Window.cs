@@ -32,16 +32,17 @@ namespace ColladaRender
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
             TextureManager.LoadTexture("skin", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_BaseColorOpacity.png", TextureUnit.Texture0);
-            TextureManager.LoadTexture("normals", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_Normal.png", TextureUnit.Texture1);
+            TextureManager.LoadTexture("normals", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_NOpenGL.png", TextureUnit.Texture1);
             TextureManager.LoadTexture("metallic", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_Metallic.png", TextureUnit.Texture2);
             TextureManager.LoadTexture("roughness", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_Roughness.png", TextureUnit.Texture3);
             TextureManager.LoadTexture("ao", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_AO.png", TextureUnit.Texture4);
 
             _model = Model.Load(COLLADA.Load("RenderEngine/res/dae/Soi_Armour_A.dae"));
-            _light = new Light(Vector3.UnitY * 2);
-            _camera = new Camera(Vector3.One, Size.X / (float)Size.Y);
+            _model.Rotate(Quaternion.FromAxisAngle(-Vector3.UnitX, 90f));
+            _light = new Light(Vector3.UnitY - Vector3.UnitZ);
+            _camera = new Camera(Vector3.One - Vector3.UnitX, Size.X / (float)Size.Y);
             
-            CursorGrabbed = true;            
+            CursorGrabbed = true;
 
             GL.ClearColor(Color.FromArgb(0, 0, 0));
 

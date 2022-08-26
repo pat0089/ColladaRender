@@ -17,9 +17,9 @@ uniform mat4 uView;
 uniform mat4 uProjection;
 
 void main(void) {
+    vTexCoord = aVertexTexCoord;
     FragPosition = vec3(uModel * vec4(aVertexPosition, 1.0));
     FragNormal = mat3(uModel) * aVertexNormal;
-    vTexCoord = aVertexTexCoord;
     FragColor = aVertexColor;
     gl_Position = vec4(FragPosition, 1.0f) * uView * uProjection;
 

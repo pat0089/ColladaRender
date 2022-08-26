@@ -15,7 +15,4 @@ I had originally planned to convert this to use the Vulkan API, but this is mean
 
 That being said though, I hope to add different file format support and more advanced rendering techniques to make the models look nice.
 
-UPDATE (6/25/2022): I will be upgrading this model renderer to use PBR rendering techniques
-cont. (6/28/2022): I will also be adding a gui to easier view and edit all model data
-
-See my Trello board for more updates: https://trello.com/b/elj6haO8/colladarender
+See my [Trello board](https://trello.com/b/elj6haO8/colladarender) for updates

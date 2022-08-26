@@ -7,3 +7,4 @@ ColladaRender/RenderEngine/res/dae/WS2_pln_guidplane141.dae
 ColladaRender/RenderEngine/res/img/WS2_pln_guidplane.png
 .vs/
 
+*.gltf
