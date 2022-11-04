@@ -26,6 +26,11 @@ namespace ColladaRender
         {
             base.OnLoad();
 
+            GlobalInputManager.RegisterKeyDown(
+                (context, context2) => Close(),
+                Keys.Escape
+                );
+
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Blend);
 
@@ -38,7 +43,7 @@ namespace ColladaRender
             TextureManager.LoadTexture("ao", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_AO.png", TextureUnit.Texture4);
 
             _model = Model.Load(COLLADA.Load("RenderEngine/res/dae/Soi_Armour_A.dae"));
-            _model.Rotate(Quaternion.FromAxisAngle(-Vector3.UnitX, 90f));
+            //_model.Rotate(Quaternion.FromAxisAngle(-Vector3.UnitX, 90f));
             _light = new Light(Vector3.UnitY - Vector3.UnitZ);
             _camera = new Camera(Vector3.One - Vector3.UnitX, Size.X / (float)Size.Y);
             
@@ -144,13 +149,6 @@ namespace ColladaRender
             var timeElapsed = (float)args.Time;
             var keyboard = KeyboardState;
             var mouse = MouseState;
-
-
-
-            if (keyboard[Keys.Escape])
-            {
-                Close();
-            }
             
             if (KeyboardState.IsKeyPressed(Keys.T))
             {
