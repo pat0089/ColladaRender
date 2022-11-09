@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
+﻿using ImageMagick;
+using Image = ImageMagick.MagickImage;
 using OpenTK.Graphics.OpenGL4;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 
@@ -22,19 +22,14 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes.GLWrapper
             //Generate the internal id and bind the Texture2D context to it
             _id = GL.GenTexture();
             Use(TextureUnit.Texture0);
-            
+
             //use a Bitmap image object that is loaded from the filepath; is disposed automatically
-            using (var image = new Bitmap(filepath))
+            using (var image = new Image(filepath))
             {
                 //The image in OpenGL context has to be in UV space not SR, which is loaded from file
-                image.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
+                image.Flip();
                 //Rip actual image the data away from the image object
-                var data = image.LockBits(
-                    new Rectangle(0, 0, image.Width, image.Height), //Lock the whole of the images bits
-                    ImageLockMode.ReadOnly, //Lock bits in read-only
-                    System.Drawing.Imaging.PixelFormat.Format32bppArgb //Lock in the 32-bit ARGB mode for reading
-                );
+                var data = image.GetPixels();
                 
                 //Load the read image data into vram
                 GL.TexImage2D(TextureTarget.Texture2D,
@@ -45,7 +40,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes.GLWrapper
                     0, //border size
                     PixelFormat.Bgra, //format of the data loaded from the file
                     PixelType.UnsignedByte, //data type of pixel data
-                    data.Scan0 //pointer to the pixel data
+                    data.ToByteArray(0, 0, image.Width, image.Height, PixelMapping.RGBA) //pointer to the pixel data
                     );
             }
             
