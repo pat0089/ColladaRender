@@ -26,9 +26,43 @@ namespace ColladaRender
         {
             base.OnLoad();
 
+            //Press the escape key to close
             GlobalInputManager.RegisterKeyDown(
-                (context, context2) => Close(),
+                (context, context2) => 
+                    Close(),
                 Keys.Escape
+                );
+
+            //Toggle the texture with the single white pixel
+            GlobalInputManager.RegisterKeyDown(
+                (context, context2) =>
+                {
+                    if (_model.TextureName == TextureManager.Default)
+                    {
+                        _model.TextureName = "skin";
+                    }
+                    else
+                    {
+                        _model.TextureName = TextureManager.Default;
+                    }
+                },
+                Keys.T                
+                );
+
+            //Toggle cursor for file drop
+            GlobalInputManager.RegisterKeyDown(
+                (context, context2) =>
+                {
+                    if (CursorState == CursorState.Grabbed)
+                    {
+                        CursorState = CursorState.Normal;
+                    }
+                    else
+                    {
+                        CursorState = CursorState.Grabbed;
+                    }
+                }, 
+                Keys.F
                 );
 
             GL.Enable(EnableCap.DepthTest);
@@ -43,11 +77,11 @@ namespace ColladaRender
             TextureManager.LoadTexture("ao", "RenderEngine/res/dae/textures/T_Armour_Clean_Metal_AO.png", TextureUnit.Texture4);
 
             _model = Model.Load(COLLADA.Load("RenderEngine/res/dae/Soi_Armour_A.dae"));
-            //_model.Rotate(Quaternion.FromAxisAngle(-Vector3.UnitX, 90f));
+            //_model.Rotate(Quaternion.FromAxisAngle(Vector3.UnitX, 90f));
             _light = new Light(Vector3.UnitY - Vector3.UnitZ);
             _camera = new Camera(Vector3.One - Vector3.UnitX, Size.X / (float)Size.Y);
-            
-            CursorGrabbed = true;
+
+            CursorState = CursorState.Grabbed;
 
             GL.ClearColor(Color.FromArgb(0, 0, 0));
 
@@ -59,7 +93,7 @@ namespace ColladaRender
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             //code using my objects
-            _model.Render(_camera.ViewMatrix, _camera.ProjectionMatrix, _camera.position, _light);
+            _model.Render(_camera.ViewMatrix, _camera.ProjectionMatrix, _camera._position, _light);
             GL.Flush();
             SwapBuffers();
         }
@@ -136,68 +170,16 @@ namespace ColladaRender
             var winArgs = new GlobalInputManager.WindowArgs
             {
                 window_focused = IsFocused,
-                cursor_grabbed = CursorGrabbed,
+                cursor_grabbed = CursorState,
                 delta_time = args.Time
             };
-            GlobalInputManager.Instance.Update(winArgs);
 
             if (!IsFocused)
             {
                 return;
             }
 
-            var timeElapsed = (float)args.Time;
-            var keyboard = KeyboardState;
-            var mouse = MouseState;
-            
-            if (KeyboardState.IsKeyPressed(Keys.T))
-            {
-                if (_model.TextureName == TextureManager.Default)
-                {
-                    _model.TextureName = "skin";
-                }
-                else
-                {
-                    _model.TextureName = TextureManager.Default;
-                }
-            }
-
-            if (KeyboardState.IsKeyPressed(Keys.F))
-            {
-                CursorGrabbed = false;
-            }
-            
-            if (keyboard[Keys.L])
-            {
-                if (keyboard[Keys.Up])
-                {
-                    _light.Position += new Vector3(timeElapsed, 0.0f, 0.0f);
-                } else if (keyboard[Keys.Down])
-                {
-                    _light.Position -= new Vector3(timeElapsed, 0.0f, 0.0f);
-                } else if (keyboard[Keys.Right])
-                {
-                    _light.Position += new Vector3(0.0f, 0.0f, timeElapsed);
-                } else if (keyboard[Keys.Left])
-                {
-                    _light.Position -= new Vector3(0.0f, 0.0f, timeElapsed);
-                } else if (keyboard[Keys.Period])
-                {
-                    _light.Position += new Vector3(0.0f, timeElapsed, 0.0f);
-                } else if (keyboard[Keys.Comma])
-                {
-                    _light.Position -= new Vector3(0.0f, timeElapsed, 0.0f);
-                }
-
-                if (keyboard[Keys.I])
-                {
-                    _light.Intensity += timeElapsed;
-                } else if (keyboard[Keys.O])
-                {
-                    _light.Intensity -= timeElapsed;
-                }
-            }
-            
+            GlobalInputManager.Instance.Update(winArgs);
         }
 
         protected override void OnResize(ResizeEventArgs e)

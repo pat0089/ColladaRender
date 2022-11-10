@@ -85,7 +85,7 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
             _vao = new VertexArrayObject();
             _shader = DefaultResources.PBRShader;
 
-            //position = -mesh._avgPos;
+            //_position = -mesh._avgPos;
 
             var processedPositions = new List<Vector3>();
             var processedNormals = new List<Vector3>();
@@ -118,8 +118,8 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
         protected static void ToModelSpace(ref List<Vertex> vertices, out Vector3 avgPos)
         {
             /*To convert any model into the space of the unit Cube ((-1.0, 1.0), (-1.0, 1.0), (-1.0, 1.0))
-             * one must find the local minimums and maximums and scale on that
-             * then translate on the average position to center the model
+             * one must find the local minimums and maximums and _scale on that
+             * then translate on the average _position to center the model
              */
             
             Vector3 minPos = Vector3.PositiveInfinity;
@@ -138,25 +138,25 @@ namespace ColladaRender.RenderEngine.Core.RenderableObjects
                 avgPos += vertex.Position;
             }
 
-            //this calculates the position of the model relative to the origin when loading in, this is ignored in the final model (for now)
+            //this calculates the _position of the model relative to the origin when loading in, this is ignored in the final model (for now)
             avgPos /= vertices.Count;
             
-            //we use the position to translate the model in its space to its space's origin
+            //we use the _position to translate the model in its space to its space's origin
             maxPos -= avgPos;
             minPos -= avgPos;
 
-            //now that we're at (0, 0, 0), we can calculate the scale and scale it down by the largest dimension
+            //now that we're at (0, 0, 0), we can calculate the _scale and _scale it down by the largest dimension
             var scaleX = maxPos.X - minPos.X;
             var scaleY = maxPos.Y - minPos.Y;
             var scaleZ = maxPos.Z - minPos.Z;
 
-            //var scale = Math.Max(Math.Max(scaleX, scaleY), scaleZ);
+            //var _scale = Math.Max(Math.Max(scaleX, scaleY), scaleZ);
 
             
-            //scale down to model space and translate to the origin (such that arcball rotation is around the center of the model's mesh)
+            //_scale down to model space and translate to the origin (such that arcball _rotation is around the center of the model's mesh)
             foreach (var vertex in vertices)
             {
-                //vertex.Position /= Vector3.One * scale;
+                //vertex.Position /= Vector3.One * _scale;
                 vertex.Position -= avgPos;
                 //vertex.Normal = vertex.Normal * ;
 

@@ -14,7 +14,6 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         public string TextureName = TextureManager.Default;
         protected int _numIndices;
 
-
         public void Render()
         {
             _vao.BindAllAttribs();
@@ -31,7 +30,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
             _vao.BindAllAttribs();
             _shader.Activate();
 
-            _shader.SetMat4("uModel", Matrix4.CreateTranslation(position) * Matrix4.CreateScale(scale));
+            _shader.SetMat4("uModel", Matrix4.CreateTranslation(_position) * Matrix4.CreateScale(_scale) * Matrix4.CreateFromQuaternion(_rotation));
             _shader.SetMat4("uView", view);
             _shader.SetMat4("uProjection", projection);
 
@@ -40,11 +39,11 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         }
         
         /// <summary>
-        /// Advanced rendering function that does Phong shading based on the Light and camera position parameters
+        /// Advanced rendering function that does Phong shading based on the Light and camera _position parameters
         /// </summary>
         /// <param name="view">Camera view matrix</param>
         /// <param name="projection">Camera projection matrix</param>
-        /// <param name="camPosition">Camera position</param>
+        /// <param name="camPosition">Camera _position</param>
         /// <param name="light">Light object</param>
         public void Render(Matrix4 view, Matrix4 projection, Vector3 camPosition, Light light)
         {
@@ -54,7 +53,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
             _vao.BindAllAttribs();
             _shader.Activate();
 
-            _shader.SetMat4("uModel", Matrix4.CreateTranslation(position));
+            _shader.SetMat4("uModel", Matrix4.CreateTranslation(_position) * Matrix4.CreateScale(_scale) * Matrix4.CreateFromQuaternion(_rotation));
             _shader.SetMat4("uView", view);
             _shader.SetMat4("uProjection",projection);
 

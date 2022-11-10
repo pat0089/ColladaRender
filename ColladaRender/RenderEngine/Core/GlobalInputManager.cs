@@ -22,7 +22,7 @@ namespace ColladaRender.RenderEngine.Core
         {
             public bool window_focused { get; set; }
             
-            public bool cursor_grabbed { get; set; }
+            public CursorState cursor_grabbed { get; set; }
 
             public double delta_time { get; set; }
         }

@@ -9,30 +9,34 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
 {
     public class SceneObject
     {
-        internal Vector3 position = Vector3.Zero;
+        internal Vector3 _position = Vector3.Zero;
 
-        internal Quaternion rotation = Quaternion.Identity;
+        internal Quaternion _rotation = Quaternion.Identity;
 
-        internal Vector3 scale = Vector3.One;
+        internal Vector3 _scale = Vector3.One;
+
+        internal List<SceneObject> Children = new();
+
+        internal SceneObject Parent;
 
         public void Rotate(Quaternion rotation)
         {
-            this.rotation = this.rotation * rotation;
+            this._rotation = this._rotation * rotation;
         }
 
         public void Translate(Vector3 translation)
         {
-            this.position += translation;
+            this._position += translation;
         }
 
         public void SetPosition(Vector3 position)
         {
-            this.position = position;
+            this._position = position;
         }
 
         public void SetScale(Vector3 scale)
         {
-            this.scale = scale;
+            this._scale = scale;
         }
     }
 }

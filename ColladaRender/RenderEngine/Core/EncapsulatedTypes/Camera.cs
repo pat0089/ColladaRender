@@ -69,7 +69,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         public Matrix4 ViewMatrix {
             get
             {
-                return Matrix4.LookAt(position * (Vector3.One * _zoomPercentage), Vector3.Zero, Vector3.UnitY);
+                return Matrix4.LookAt(_position * (Vector3.One * _zoomPercentage), Vector3.Zero, Vector3.UnitY);
             }
         }
 
@@ -87,11 +87,11 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
         /// <summary>
         /// Creates a camera view
         /// </summary>
-        /// <param name="position">Starting position of the camera</param>
+        /// <param name="position">Starting _position of the camera</param>
         /// <param name="aspectRatio">Aspect ratio of the screen</param>
         public Camera(Vector3 position, float aspectRatio)
         {
-            this.position = position;
+            this._position = position;
             _aspectRatio = aspectRatio;
             GlobalInputManager.RegisterMouseScroll(Zoom);
             GlobalInputManager.RegisterButtonUp(ResetMovement, MouseButton.Left);
@@ -124,7 +124,7 @@ namespace ColladaRender.RenderEngine.Core.EncapsulatedTypes
             var q1 = Quaternion.FromAxisAngle(Vector3.UnitY, deltaDegrees.X * 0.01f);
             var q2 = Quaternion.FromAxisAngle(Vector3.UnitX, deltaDegrees.Y * 0.01f);
             var newDirection = q1 * q2;
-            position = Vector3.Transform(position, newDirection);
+            _position = Vector3.Transform(_position, newDirection);
         }
 
         /// <summary>
